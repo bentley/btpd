@@ -21,7 +21,7 @@ else
 fi)
 AC_DEFUN([CC_ARGS_OK_IFELSE],
 AC_LANG_PUSH(C)
-AC_LANG_CONFTEST([int foo(void) { return 12; }])
+AC_LANG_CONFTEST([AC_LANG_SOURCE([int foo(void) { return 12; }])])
 AC_LANG_POP(C)
 PROG_SILENT_IFELSE([$CC $1 -c conftest.c],
 rm -f conftest.c conftest.$OBJEXT
@@ -50,11 +50,11 @@ LIBS=$old_LIBS
 AC_CHECK_FUNCS(asprintf)
 
 AC_MSG_CHECKING(for CLOCK_MONOTONIC)
-AC_COMPILE_IFELSE([
+AC_COMPILE_IFELSE([AC_LANG_SOURCE([
     #include <sys/time.h>
     #include <time.h>
     int main(void) { return clock_gettime(CLOCK_MONOTONIC, (void *)0); }
-],  clock_gettime=yes, clock_gettime=no)
+])],  clock_gettime=yes, clock_gettime=no)
 AC_MSG_RESULT($clock_gettime)
 if test $clock_gettime = yes; then
     old_LIBS=$LIBS
@@ -134,10 +134,10 @@ for i in 0 1 2 3 4 5 6 7; do
 
     old_CFLAGS=$CFLAGS; old_LIBS=$LIBS
     CFLAGS="$TD_CFLAGS $CFLAGS"; LIBS="$TD_LIBS $LIBS"
-    AC_LINK_IFELSE([
+    AC_LINK_IFELSE([AC_LANG_SOURCE([
         #include <pthread.h>
         int main(void) { return pthread_create(0,0,0,0);}
-    ], [
+    ])], [
         AC_MSG_RESULT(yes)
         CFLAGS=$old_CFLAGS; LIBS=$old_LIBS
         break
