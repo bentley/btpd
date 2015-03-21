@@ -13,7 +13,6 @@ parse_url(const char *url)
     char *host_e = NULL;
     char *port = NULL;
     char *uri = NULL;
-    char *uri_e = NULL;
     size_t host_s = 0;
     size_t uri_s = 0;
     struct url *res = malloc(sizeof(*res));
@@ -22,6 +21,7 @@ parse_url(const char *url)
     } state;
     enum state st = PRO;
 
+    /* mark start and end points of url components */
     for (; *u; ++u) {
         if (st == PRO) {
             if (strncmp(u, "http://", 7) == 0) {
@@ -43,16 +43,15 @@ parse_url(const char *url)
                 st == PORT;
             } else if (*u == '/' || *u == '?') {
                 host_e = u;
+                uri = host_e;
                 st = URI;
             }
         } else if (st == PORT) {
             if (*u < '0' || *u > '9') {
                 uri = u;
-                uri_e = uri;
                 st = URI;
             }
-        } else if (st == URI)
-            uri_e++;
+        }
     }
 
     if (port == NULL)
@@ -60,11 +59,15 @@ parse_url(const char *url)
     else
         sscanf(port, "%hu", &res->port);
     host_s = host_e - host;
-    uri_s = uri_e - uri;
+    uri_s = strlen(uri);
     res->host = malloc(host_s + 1);
     res->uri = malloc(uri_s + 1);
-    if (st == FAIL || res == NULL || res->host == NULL || res->uri == NULL)
+    if (st == FAIL || res == NULL || res->host == NULL || res->uri == NULL) {
+        res->host ? free(res->host) : ;
+        res->uri ? free(res->uri) : ;
+        res ? free(res) : ;
         return NULL;
+    }
     memcpy(&res->host, &host, host_s);
     memcpy(&res->uri, &uri, uri_s);
     res->uri[uri_s + 1] = '\0';
