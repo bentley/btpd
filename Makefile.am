@@ -46,7 +46,7 @@ misc_libmisc_a_SOURCES=\
 	misc/queue.h\
 	misc/stream.c misc/stream.h\
 	misc/subr.c misc/subr.h\
-	misc/utils.h
+	misc/url_client.c misc/url_client.h misc/utils.h
 
 # evloop
 EXTRA_evloop_libevloop_a_SOURCES=evloop/epoll.c evloop/kqueue.c evloop/poll.c
