@@ -10,8 +10,6 @@ enum tr_event {
 
 extern long tr_key;
 
-enum tr_type { TR_HTTP };
-
 struct tr_response {
     enum {
         TR_RES_FAIL, TR_RES_CONN, TR_RES_BAD, TR_RES_OK

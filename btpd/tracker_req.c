@@ -1,5 +1,6 @@
 #include "btpd.h"
 #include "http_client.h"
+#include "url_client.h"
 
 #define REQ_DELAY 1
 #define DEFAULT_INTERVAL rand_between(25 * 60, 30 * 60)
@@ -14,7 +15,7 @@ struct tr_entry {
     BTPDQ_ENTRY(tr_entry) entry;
     char *failure;
     char *url;
-    enum tr_type type;
+    enum proto type;
 };
 
 BTPDQ_HEAD(tr_entry_tq, tr_entry);
@@ -65,7 +66,7 @@ req_send(struct tr_tier *t)
     btpd_log(BTPD_L_TR, "sending event %d to '%s' for '%s'.\n",
         t->event, t->cur->url, torrent_name(t->tp));
     switch (t->cur->type) {
-    case TR_HTTP:
+    case HTTP:
         return httptr_req(t->tp, t, t->cur->url, t->event);
     default:
         abort();
@@ -76,7 +77,7 @@ static void
 req_cancel(struct tr_tier *t)
 {
     switch (t->cur->type) {
-    case TR_HTTP:
+    case HTTP:
         httptr_cancel(t->req);
         break;
     default:
@@ -161,13 +162,13 @@ static void
 add_tracker(struct tr_tier *t, const char *url)
 {
     struct tr_entry *e;
-    struct http_url *hu;
-    if ((hu = http_url_parse(url)) != NULL) {
+    struct url *hu;
+    if ((hu = parse_url(url)) != NULL) {
         http_url_free(hu);
         e = btpd_calloc(1, sizeof(*e));
         if ((e->url = strdup(url)) == NULL)
             btpd_err("Out of memory.\n");
-        e->type = TR_HTTP;
+        e->type = HTTP;
     } else {
         btpd_log(BTPD_L_TR, "skipping unsupported tracker '%s' for '%s'.\n",
             url, torrent_name(t->tp));
