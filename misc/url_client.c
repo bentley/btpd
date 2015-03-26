@@ -8,17 +8,17 @@
 struct url *
 parse_url(const char *url)
 {
-    char *u = url;
-    char *host = NULL
-    char *host_e = NULL;
-    char *port = NULL;
-    char *uri = NULL;
+    const char *u = url;
+    const char *host = NULL;
+    const char *host_e = NULL;
+    const char *port = NULL;
+    const char *uri = NULL;
     size_t host_s = 0;
     size_t uri_s = 0;
     struct url *res = malloc(sizeof(*res));
-    enum {
+    enum state {
         PRO, HOST, PORT, URI, FAIL
-    } state;
+    };
     enum state st = PRO;
 
     /* mark start and end points of url components */
@@ -63,9 +63,9 @@ parse_url(const char *url)
     res->host = malloc(host_s + 1);
     res->uri = malloc(uri_s + 1);
     if (st == FAIL || res == NULL || res->host == NULL || res->uri == NULL) {
-        res->host ? free(res->host) : ;
-        res->uri ? free(res->uri) : ;
-        res ? free(res) : ;
+        res->host ? free(res->host) : 1;
+        res->uri ? free(res->uri) : 1;
+        res ? free(res) : 1;
         return NULL;
     }
     memcpy(&res->host, &host, host_s);
