@@ -68,8 +68,8 @@ parse_url(const char *url)
     }
     memcpy(&res->host, &host, host_s);
     memcpy(&res->uri, &uri, uri_s);
-    res->uri[uri_s + 1] = '\0';
-    res->host[host_s + 1] = '\0';
+    res->uri[uri_s] = '\0';
+    res->host[host_s] = '\0';
     return res;
 }
 
