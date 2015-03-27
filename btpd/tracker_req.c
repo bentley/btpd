@@ -164,7 +164,7 @@ add_tracker(struct tr_tier *t, const char *url)
     struct tr_entry *e;
     struct url *hu;
     if ((hu = parse_url(url)) != NULL) {
-        http_url_free(hu);
+        free_url(hu);
         e = btpd_calloc(1, sizeof(*e));
         if ((e->url = strdup(url)) == NULL)
             btpd_err("Out of memory.\n");
