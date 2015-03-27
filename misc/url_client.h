@@ -8,3 +8,4 @@ struct url {
 };
 
 struct url *parse_url(const char *url);
+void free_url(struct url *u);

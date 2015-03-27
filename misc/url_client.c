@@ -63,9 +63,7 @@ parse_url(const char *url)
     res->host = malloc(host_s + 1);
     res->uri = malloc(uri_s + 1);
     if (st == FAIL || res == NULL || res->host == NULL || res->uri == NULL) {
-        res->host ? free(res->host) : 1;
-        res->uri ? free(res->uri) : 1;
-        res ? free(res) : 1;
+        free_url(res);
         return NULL;
     }
     memcpy(&res->host, &host, host_s);
@@ -73,4 +71,12 @@ parse_url(const char *url)
     res->uri[uri_s + 1] = '\0';
     res->host[host_s + 1] = '\0';
     return res;
+}
+
+void
+free_url(struct url *u)
+{
+    u->host ? free(u->host) : 1;
+    u->uri ? free(u->uri) : 1;
+    u ? free(u) : 1;
 }
