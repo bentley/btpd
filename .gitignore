@@ -1,5 +1,6 @@
 # http://www.gnu.org/software/automake
 Makefile.in
+Makefile
 
 # http://www.gnu.org/software/autoconf
 /autom4te.cache
@@ -9,6 +10,11 @@ Makefile.in
 /depcomp
 /install-sh
 /missing
+.dirstamp
+
+# Logs
+config.log
+config.status
 
 # Dependency files
 .deps
