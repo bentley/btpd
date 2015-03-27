@@ -35,12 +35,12 @@ parse_url(const char *url)
                 host = u;
                 st = HOST;
             } else
-                st == FAIL;
+                st = FAIL;
         } else if (st == HOST) {
             if (*u == ':') {
                 host_e = u;
                 port = u + 1;
-                st == PORT;
+                st = PORT;
             } else if (*u == '/' || *u == '?') {
                 host_e = u;
                 uri = host_e;
