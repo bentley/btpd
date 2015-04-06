@@ -3,7 +3,23 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "iobuf.h"
 #include "url_client.h"
+
+struct request {
+    enum {
+        HEAD, CHUNK_SIZE, CHUNK_DATA, CHUNK_CRLF, ID_DATA
+    } pstate;
+    int parsing;
+    int canceled;
+    int chunked;
+    long length;
+    cb_t cb;
+    void *arg;
+    struct url *url;
+    struct iobuf rbuf;
+    struct iobuf wbuf;
+};
 
 struct url *
 parse_url(const char *url)
