@@ -21,6 +21,25 @@ struct request {
     struct iobuf wbuf;
 };
 
+static void
+req_free(struct request *req)
+{
+    req->url ? free_url(req->url) : 1;
+    iobuf_free(&req->rbuf);
+    iobuf_free(&req->wbuf);
+    free(req);
+}
+
+static void
+req_error(struct http_req *req)
+{
+    struct response res;
+    res.type = ERR;
+    res.v.error = 1;
+    req->cb(req, &res, req->arg);
+    req_free(req);
+}
+
 struct url *
 url_parse(const char *url)
 {
