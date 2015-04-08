@@ -22,7 +22,7 @@ struct request {
 };
 
 struct url *
-parse_url(const char *url)
+url_parse(const char *url)
 {
     const char *u = url;
     const char *host = NULL;
@@ -79,7 +79,7 @@ parse_url(const char *url)
     res->host = malloc(host_s + 1);
     res->uri = malloc(uri_s + 1);
     if (st == FAIL || res == NULL || res->host == NULL || res->uri == NULL) {
-        free_url(res);
+        url_free(res);
         return NULL;
     }
     memcpy(&res->host, &host, host_s);
@@ -90,7 +90,7 @@ parse_url(const char *url)
 }
 
 void
-free_url(struct url *u)
+url_free(struct url *u)
 {
     u->host ? free(u->host) : 1;
     u->uri ? free(u->uri) : 1;

@@ -29,11 +29,11 @@ struct response {
 
 typedef void (*cb_t)(struct request *, struct response *, void *);
 
-struct url *parse_url(const char *url);
-void free_url(struct url *u);
+struct url *url_parse(const char *url);
+void url_free(struct url *u);
 int get(struct request **out, const char *url, const char *hdrs, cb_t cb, void *arg);
 void cancel(struct request *req);
-struct url *get_url(struct request *req);
+struct url *url_get(struct request *req);
 int want_read(struct request *req);
 int want_write(struct request *req);
 int rread(struct request *req, int sd);
