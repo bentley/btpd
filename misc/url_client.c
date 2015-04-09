@@ -24,10 +24,12 @@ struct request {
 static void
 req_free(struct request *req)
 {
-    req->url ? free_url(req->url) : 1;
-    iobuf_free(&req->rbuf);
-    iobuf_free(&req->wbuf);
-    free(req);
+    if (req != NULL) {
+        free_url(req->url);
+        iobuf_free(&req->rbuf);
+        iobuf_free(&req->wbuf);
+        free(req);
+    }
 }
 
 static void
@@ -111,7 +113,9 @@ url_parse(const char *url)
 void
 url_free(struct url *u)
 {
-    u->host ? free(u->host) : 1;
-    u->uri ? free(u->uri) : 1;
-    u ? free(u) : 1;
+    if (u != NULL) {
+        u->host ? free(u->host) : 1;
+        u->uri ? free(u->uri) : 1;
+        free(u);
+    }
 }
