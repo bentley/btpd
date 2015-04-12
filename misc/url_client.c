@@ -25,7 +25,7 @@ static void
 req_free(struct request *req)
 {
     if (req != NULL) {
-        free_url(req->url);
+        url_free(req->url);
         iobuf_free(&req->rbuf);
         iobuf_free(&req->wbuf);
         free(req);
@@ -33,7 +33,7 @@ req_free(struct request *req)
 }
 
 static void
-req_error(struct http_req *req)
+req_error(struct request *req)
 {
     struct response res;
     res.type = ERR;
