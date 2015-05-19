@@ -1,22 +1,18 @@
-.TH BTINFO "1" "2010\-07\-31" "BitTorrent Protocol Daemon 0.16" "User Commands"
-.\" disable hyphenation
-.nh
-.\" adjust text to left margin only
-.ad l
-.\" -----------------------------------------------------------------
-.\" MAIN CONTENT
-.\" -----------------------------------------------------------------
-.SH "NAME"
-btinfo \- BitTorrent Protocol Daemon information
-.SH "SYNOPSIS"
-.B btinfo
-\fIfile\fR
-.SH "EXAMPLE"
-List the torrent information for \fBosol\-0906\-x86.iso.torrent\fR
-.PP
-.nf
-.B $ btinfo /var/torrents/osol\-0906\-x86.iso.torrent
-Name: osol\-0906\-x86.iso
+.Dd May 10, 2015
+.Dt BTINFO 1
+.Os
+.Sh NAME
+.Nm btinfo
+.Nd BitTorrent Protocol Daemon information
+.Sh SYNOPSIS
+.Nm btinfo
+.Ar
+.Sh EXAMPLES
+List the torrent information for
+.Pa osol-0906-x86.iso.torrent :
+.Bd -literal
+$ btinfo /var/torrents/osol-0906-x86.iso.torrent
+Name: osol-0906-x86.iso
 Info hash: 58aca632a9f68427a8ac8f58cafa7a72ca067dba
 Tracker URLs: [ [ http://dlc.sun.com:6969/announce ] [ http://dlc.sun.com:16969/announce ] ]
 Number of pieces: 1354
@@ -24,24 +20,29 @@ Piece size: 524288
 Total size: 709871616
 Number of files: 1
 Files:
-osol\-0906\-x86.iso (709871616)
-.fi
-.SH "TROUBLESHOOTING"
-If \fBbtpd\fR has shut down for some unknown reason, check the logfile for possible clues.
-.SH "BUGS"
-Known bugs are listed at \fIhttp://github.com/btpd/btpd/issues\fR
-.sp
-Before submitting a bug report, please verify that you are running the latest version of btpd.
-.SH "AUTHORS"
-.sp
+osol-0906-x86.iso (709871616)
+.Ed
+.Sh SEE ALSO
+.Xr btcli 1 ,
+.Xr btpd 1
+.Sh AUTHORS
+.An -nosplit
 Current maintainers:
-.sp
-\- Marq Schneider <\fIqueueRAM@gmail.com\fR>
-.sp
+.Bl -bullet
+.It
+.An Marq Schneider Aq Mt queueRAM@gmail.com
+.El
+.Pp
 Past contributors:
-.sp
-\- Richard Nyberg <\fIbtpd@murmeldjur.se\fR> 
-.SH "SEE ALSO"
-.BR \fBbtpd\fR(1)
-.BR \fBbtcli\fR(1)
-
+.Bl -bullet
+.It
+Richard Nyberg
+.Aq Mt btpd@murmeldjur.se
+.El
+.Sh BUGS
+Known bugs are listed at
+.Lk http://github.com/btpd/btpd/issues .
+.Pp
+Before submitting a bug report,
+please verify that you are running the latest version of
+.Xr btpd 1 .

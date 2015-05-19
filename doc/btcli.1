@@ -1,262 +1,282 @@
-.TH BTCLI "1" "2010\-07\-31" "BitTorrent Protocol Daemon 0.16" "User Commands"
-.\" disable hyphenation
-.nh
-.\" adjust text to left margin only
-.ad l
-.\" -----------------------------------------------------------------
-.\" MAIN CONTENT
-.\" -----------------------------------------------------------------
-.SH "NAME"
-btcli \- command line interface to btpd
-.SH "SYNOPSIS"
-.B btcli
-\fIOPERATION\fR [\fIOPERATION_OPTIONS\fR]
-.SH "DESCRIPTION"
-.PP
-\fBbtcli\fR is a utility that interacts with a running btpd daemon.
+.Dd May 10, 2015
+.Dt BTCLI 1
+.Os
+.Sh NAME
+.Nm btcli
+.Nd command line interface to btpd
+.Sh SYNOPSIS
+.Nm btcli
+.Ar operation
+.Op Ar options
+.Sh DESCRIPTION
+.Nm
+is a utility that interacts with a running
+.Xr btpd 1
+daemon.
 It has several different modes of operation.
-.SH "OPERATIONS"
-.PP
+.Sh OPERATIONS
 One of the following operations must be specified when running btcli:
-.TP
-\fBadd\fR \- Add torrents to btpd.
-.TP
-\fBdel\fR \- Remove torrents from btpd.
-.TP
-\fBkill\fR \- Shut down btpd.
-.TP
-\fBlist\fR \- List torrents.
-.TP
-\fBrate\fR \- Set the global up and download rates in KB/s.
-.TP
-\fBstart\fR \- Activate torrents.
-.TP
-\fBstat\fR \- Display stats for active torrents.
-.TP
-\fBstop\fR \- Deactivate torrents.
-.TP
-\fB\-\-help\fR \fIOPERATION\fR Show help for the specified operation.
-.SH "ADD OPTIONS"
-.TP
-\fB\-d\fR dir
-Specifies the directory in which the files in the torrent will be downloaded;
-It does not specify \fBbtpd\fR's "work" directory.
-That is gathered from the environment variable \fI$HOME\fR.
-.TP
-\fB\-N, \-\-nostart\fR
-Do not start the torrent immediately after adding it.
-.TP
-\fB\-T, \-\-topdir\fR
-Append the torrent top directory (if any) to the content path.
-.TP
-\fB\-n\fR name
-Specifies the name to be displayed for this torrent.
-.TP
-\fB\-l\fR label
-Set the label to associate with torrent.
-.SH "LIST OPTIONS"
-.TP
-\fB\-a\fR
-List active torrents.
-.TP
-\fB\-i\fR
-List inactive torrents.
-.TP
-\fB\-f\fR format
-Specifies a custom format to use while displaying torrents.  The following is a
-list of the characters that can be used:
-.RS 8
-.PP
-\fB%n\fR \- torrent name
-.br
-\fB%#\fR \- torrent number
-.br
-\fB%h\fR \- torrent hash
-.br
-\fB%l\fR \- torrent label
-.br
-\fB%d\fR \- download directory
-.br
-\fB%t\fR \- state
-.br
-\fB%P\fR \- peer count
-.PP
-\fB%^\fR \- upload rate
-.br
-\fB%v\fR \- download rate
-.PP
-\fB%D\fR \- downloaded bytes
-.br
-\fB%U\fR \- uploaded bytes
-.br
-\fB%g\fR \- bytes got
-.br
-\fB%u\fR \- bytes uploaded
-.br
-\fB%s\fR \- total size, (formatted: prints K, M, G)
-.br
-\fB%S\fR \- total size, in bytes
-.PP
-\fB%A\fR \- available pieces
-.br
-\fB%T\fR \- total pieces
-.br
-\fB%H\fR \- have pieces
-.PP
-\fB%p\fR \- percent have (formatted)
-.br
-\fB%r\fR \- ratio
-.PP
-\fB%%\fR \- a percent symbol: '%'
-.RE
-.SH "STAT OPTIONS"
-.TP
-\fB\-i\fR
-Display individual lines for each torrent.
-.TP
-\fB\-n\fR
-Display the name of each torrent.  Implies '\-i'.
-.SH "START OPTIONS"
-.TP
-\fB\-a\fR
-Activate all non\-active torrents.
-.SH "STOP OPTIONS"
-.TP
-\fB\-a\fR
-Deactivate all torrents.
-.SH "USAGE"
-.PP
-btpd must be started before btcli can be used.  See \fBbtpd\fR(1) for help with starting btpd.
-.PP
-To start sharing a torrent with btpd, the torrent needs to be added to btpd. This is done with \fBbtcli add\fR. Unless otherwise specified, btpd automatically starts to share the torrent and download any missing data. If the content directory you specify when adding a torrent does not exist, btpd will create it.
-.PP
-You can see which torrents have been added to btpd with \fBbtcli list\fR.  The list mode also displays a number for each added torrent. This number can be used to specify the target torrent for the btcli modes, so you don't have to keep the torrent file after adding it.
-.PP
-The up\- and download progress can be followed by using the \fBbtcli stat\fR mode. Both the list and stat modes use the following indicators to display the state of a torrent:
-.RS 4
-.TP 4
-\fB+\fR
-The torrent is starting. This may take time if btpd needs to test the content of this torrent or one started before it.
-.TP 4
-\fB\-\fR
-The torrent is being stopped.
-.TP 4
-\fBI\fR
-The torrent is inactive.
-.TP 4
-\fBS\fR
-btpd is seeding the torrent.
-.TP 4
-\fBL\fR
-btpd is leeching the torrent.
-.RE
-.PP
-You can stop an active torrent with \fBbtcli stop\fR.  You can start an inactive torrent by using \fBbtcli start\fR.
-.PP
-.B Note:
-Torrents can be specified either with its number or its file.
-.PP
-The \fBbtcli del\fR mode should only be used when you're totally finished with sharing a torrent. The mode will remove the torrent and its associated data from btpd. It is a bad idea to remove a not fully downloaded torrent and then add it again, since btpd has lost information on the not fully downloaded pieces and will need to download the data again.
-.PP
-To shut down btpd use \fBbtcli kill\fR.
-
-.SH "EXAMPLES"
-Display a list btpd's torrents and their number, size, status, etc.
-.RS 4
-.B $ btcli list
-.RE
-.PP
-Same as above, but only for torrent 12 and my.little.torrent.
-.br
-.RS 4
-.B $ btcli list 12 my.little.torrent
-.RE
-.PP
-Same as above but only for active torrents.
-.br
-.RS 4
-.B $ btcli list \-a
-.RE
-.PP
-Add foo.torrent, with content dir foo.torrent.d, and start it.
-.br
-.RS 4
-.B $ btcli add \-d foo.torrent.d foo.torrent
-.RE
-.PP
-Same as above without starting it.
-.br
-.RS 4
-.B $ btcli add \-\-no\-start \-d foo.torrent.d foo.torrent
-.RE
-.PP
-Start bar.torrent and torrent number 7.
-.br
-.RS 4
-.B $ btcli start bar.torrent 7
-.RE
-.PP
-Stop torrent number 7.
-.br
-.RS 4
-.B $ btcli stop 7
-.RE
-.PP
-Stop all active torrents.
-.br
-.RS 4
-.B $ btcli stop \-a
-.RE
-.PP
-Remove bar.torrent and it's associated information from btpd.
-.br
-.RS 4
-.B $ btcli del bar.torrent
-.RE
-.PP
-Display a summary of up/download stats for the active torrents.
-.br
-.RS 4
-.B $ btcli stat
-.RE
-.PP
-Display the summary once every five seconds.
-.br
-.RS 4
-.B $ btcli stat \-w 5
-.RE
-.PP
-Same as above, but also display individual stats for each active torrent.
-.br
-.RS 4
-.B $ btcli stat \-w 5 \-i
-.RE
-.PP
-Set the global upload rate to 20KB/s and download rate to 1MB/s.
-.br
-.RS 4
-.B $ btcli rate 20K 1M
-.RE
-.PP
+.Bl -tag -width Ds
+.It Cm add
+Add torrents to btpd.
+.It Cm del
+Remove torrents from btpd.
+.It Cm kill
 Shut down btpd.
-.br
-.RS 4
-.B $ btcli kill
-.RE
-.SH "BUGS"
-Known bugs are listed at \fIhttp://github.com/btpd/btpd/issues\fR
-.sp
-Before submitting a bug report, please verify that you are running the latest version of btpd.
-.SH "AUTHORS"
-.sp
+.It Cm list
+List torrents.
+.It Cm rate
+Set the global up and download rates in kB/s.
+.It Cm start
+Activate torrents.
+.It Cm stat
+Display stats for active torrents.
+.It Cm stop
+Deactivate torrents.
+.It Fl -help Ar operation
+Show help for the specified
+.Ar operation .
+.El
+.Sh ADD OPTIONS
+.Cm add
+supports the following options:
+.Bl -tag -width Ds
+.It Fl d Ar dir
+Specifies the directory in which the files in the torrent will be downloaded;
+it does not specify
+.Xr btpd 1 Ns 's
+.Dq work
+directory.
+That is gathered from the environment variable
+.Ev $HOME .
+.It Fl N , Fl -nostart
+Do not start the torrent immediately after adding it.
+.It Fl T , Fl -topdir
+Append the torrent top directory (if any) to the content path.
+.It Fl n Ar name
+Specifies the name to be displayed for this torrent.
+.It Fl l Ar label
+Set the label to associate with torrent.
+.El
+.Sh LIST OPTIONS
+.Cm list
+supports the following options:
+.Bl -tag -width Ds
+.It Fl a
+List active torrents.
+.It Fl i
+List inactive torrents.
+.It Fl f Ar format
+Specifies a custom format to use while displaying torrents.
+The following is a list of the characters that can be used:
+.Bl -diag
+.It %n
+torrent name
+.It %#
+torrent number
+.It %h
+torrent hash
+.It %l
+torrent label
+.It %d
+download directory
+.It %t
+state
+.It %P
+peer count
+.It %^
+upload rate
+.It %v
+download rate
+.It %D
+downloaded bytes
+.It %U
+uploaded bytes
+.It %g
+bytes got
+.It %u
+bytes uploaded
+.It %s
+total size, (formatted: prints K, M, G)
+.It %S
+total size, in bytes
+.It %A
+available pieces
+.It %T
+total pieces
+.It %H
+have pieces
+.It %p
+percent have (formatted)
+.It %r
+ratio
+.It %%
+a percent symbol:
+.Ql %
+.El
+.El
+.Sh STAT OPTIONS
+.Cm stat
+supports the following options:
+.Bl -tag -width Ds
+.It Fl i
+Display individual lines for each torrent.
+.It Fl n
+Display the name of each torrent.
+Implies
+.Fl i .
+.El
+.Sh START OPTIONS
+.Cm start
+supports the following options:
+.Bl -tag -width Ds
+.It Fl a
+Activate all inactive torrents.
+.El
+.Sh STOP OPTIONS
+.Cm stop
+supports the following options:
+.Bl -tag -width Ds
+.It Fl a
+Deactivate all torrents.
+.El
+.Sh USAGE
+.Xr btpd 1
+must be started before
+.Nm
+can be used.
+.Pp
+To start sharing a torrent with btpd, the torrent needs to be added to btpd.
+This is done with
+.Nm
+.Cm add .
+Unless otherwise specified,
+btpd automatically starts to share the torrent and download any missing data.
+If the content directory you specify when adding a torrent does not exist,
+btpd will create it.
+.Pp
+You can see which torrents have been added to btpd with
+.Nm
+.Cm list .
+The list mode also displays a number for each added torrent.
+This number can be used to specify the target torrent for the btcli modes,
+so you don't have to keep the torrent file after adding it.
+.Pp
+The upload and download progress can be followed by using the
+.Nm
+.Cm stat
+mode.
+Both the list and stat modes use the following indicators to display the state
+of a torrent:
+.Bl -inset
+.It +
+The torrent is starting.
+This may take time if btpd needs to test the content of this torrent or one
+started before it.
+.It -
+The torrent is being stopped.
+.It I
+The torrent is inactive.
+.It S
+btpd is seeding the torrent.
+.It L
+btpd is leeching the torrent.
+.El
+.Pp
+You can stop an active torrent with
+.Nm
+.Cm stop .
+You can start an inactive torrent by using
+.Nm
+start .
+.Pp
+.Sy Note :
+Torrents can be specified either with its number or its file.
+.Pp
+The
+.Nm
+.Cm del
+mode should only be used when you're totally finished with sharing a torrent.
+The mode will remove the torrent and its associated data from btpd.
+It is a bad idea to remove a not fully downloaded torrent and then add it
+again, since btpd has lost information on the not fully downloaded pieces and
+will need to download the data again.
+.Pp
+To shut down btpd use
+.Nm
+.Cm kill .
+.Sh EXAMPLES
+Display a list of btpd's torrents and their number, size, status, etc.
+.Dl $ btcli list
+.Pp
+Same as above, but only for torrent 12 and
+.Pa my.little.torrent .
+.Dl $ btcli list 12 my.little.torrent
+.Pp
+Same as above but only for active torrents.
+.Dl $ btcli list -a
+.Pp
+Add
+.Pa foo.torrent ,
+with content dir
+.Pa foo.torrent.d ,
+and start it.
+.Dl $ btcli add -d foo.torrent.d foo.torrent
+.Pp
+Same as above without starting it.
+.Dl $ btcli add -N -d foo.torrent.d foo.torrent
+.Pp
+Start
+.Pa bar.torrent
+and torrent number 7.
+.Dl $ btcli start bar.torrent 7
+.Pp
+Stop torrent number 7.
+.Dl $ btcli stop 7
+.Pp
+Stop all active torrents.
+.Dl $ btcli stop -a
+.Pp
+Remove
+.Pa bar.torrent
+and its associated information from btpd.
+.Dl $ btcli del bar.torrent
+.Pp
+Display a summary of up/download stats for the active torrents.
+.Dl $ btcli stat
+.Pp
+Display the summary once every five seconds.
+.Dl $ btcli stat -w 5
+.Pp
+Same as above, but also display individual stats for each active torrent.
+.Dl $ btcli stat -w 5 -i
+.Pp
+Set the global upload rate to 20 kB/s and download rate to 1 MB/s.
+.Dl $ btcli rate 20K 1M
+.Pp
+Shut down btpd.
+.Dl $ btcli kill
+.Sh SEE ALSO
+.Xr btinfo 1 ,
+.Xr btpd 1
+.Sh AUTHORS
+.An -nosplit
 Current maintainers:
-.sp
-\- Marq Schneider <\fIqueueRAM@gmail.com\fR>
-.sp
+.Bl -bullet
+.It
+.An Marq Schneider Aq Mt queueRAM@gmail.com
+.El
+.Pp
 Past contributors:
-.sp
-\- Richard Nyberg <\fIbtpd@murmeldjur.se\fR> 
-.SH "SEE ALSO"
-.BR \fBbtpd\fR(1)
-.BR \fBbtinfo\fR(1)
-
+.Bl -bullet
+.It
+Richard Nyberg
+.Aq Mt btpd@murmeldjur.se
+.El
+.Sh BUGS
+Known bugs are listed at
+.Lk https://github.com/btpd/btpd/issues .
+.Pp
+Before submitting a bug report,
+please verify that you are running the latest version of
+.Xr btpd 1 .
