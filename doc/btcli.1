@@ -15,29 +15,36 @@ is a utility that interacts with a running
 daemon.
 It has several different modes of operation.
 .Sh OPERATIONS
-One of the following operations must be specified when running btcli:
+.Nm
+supports the following commands:
+.Sx add ,
+.Sx del ,
+.Sx kill ,
+.Sx list ,
+.Sx rate ,
+.Sx start ,
+.Sx stat ,
+and
+.Sx stop .
+.Pp
+.Nm
+accepts only one option:
 .Bl -tag -width Ds
-.It Cm add
-Add torrents to btpd.
-.It Cm del
-Remove torrents from btpd.
-.It Cm kill
-Shut down btpd.
-.It Cm list
-List torrents.
-.It Cm rate
-Set the global up and download rates in kB/s.
-.It Cm start
-Activate torrents.
-.It Cm stat
-Display stats for active torrents.
-.It Cm stop
-Deactivate torrents.
 .It Fl -help Ar operation
 Show help for the specified
 .Ar operation .
 .El
-.Sh ADD OPTIONS
+.Ss add
+.Nm btcli
+.Cm add
+.Op Fl NT
+.Op Fl l Ar label
+.Op Fl n Ar name
+.Fl d Ar dir
+.Ar
+.Pp
+Add torrents to btpd.
+.Pp
 .Cm add
 supports the following options:
 .Bl -tag -width Ds
@@ -48,7 +55,7 @@ it does not specify
 .Dq work
 directory.
 That is gathered from the environment variable
-.Ev $HOME .
+.Ev HOME .
 .It Fl N , Fl -nostart
 Do not start the torrent immediately after adding it.
 .It Fl T , Fl -topdir
@@ -58,14 +65,32 @@ Specifies the name to be displayed for this torrent.
 .It Fl l Ar label
 Set the label to associate with torrent.
 .El
-.Sh LIST OPTIONS
+.Ss del
+.Nm btcli
+.Cm del
+.Ar
+.Pp
+Remove the given torrents from btpd.
+.Ss kill
+.Nm btcli
+.Cm kill
+.Pp
+Shut down btpd.
+.Ss list
+.Nm btcli
+.Cm list
+.Op Fl ai
+.Op Fl f Ar format
+.Op Ar
+.Pp
+List the given torrents,
+or all torrents (active or inactive) if no arguments are given.
+.Pp
 .Cm list
 supports the following options:
 .Bl -tag -width Ds
 .It Fl a
 List active torrents.
-.It Fl i
-List inactive torrents.
 .It Fl f Ar format
 Specifies a custom format to use while displaying torrents.
 The following is a list of the characters that can be used:
@@ -114,8 +139,25 @@ ratio
 a percent symbol:
 .Ql %
 .El
+.It Fl i
+List inactive torrents.
 .El
-.Sh STAT OPTIONS
+.Ss rate
+.Nm btcli
+.Cm rate
+.Ar up
+.Ar down
+.Pp
+Set the global upload and download rates in kB/s.
+.Ss stat
+.Nm btcli
+.Cm stat
+.Op Fl in
+.Op Fl w Ar num
+.Op Ar
+.Pp
+Display stats for active torrents.
+.Pp
 .Cm stat
 supports the following options:
 .Bl -tag -width Ds
@@ -125,15 +167,38 @@ Display individual lines for each torrent.
 Display the name of each torrent.
 Implies
 .Fl i .
+.It Fl w Ar num
+Display stats every
+.Ar num
+seconds.
 .El
-.Sh START OPTIONS
+.Ss start
+.Nm btcli
+.Cm start
+.Ar
+.Pp
+.Nm btcli
+.Cm start
+.Fl a
+.Pp
+Activate torrents.
 .Cm start
 supports the following options:
 .Bl -tag -width Ds
 .It Fl a
 Activate all inactive torrents.
 .El
-.Sh STOP OPTIONS
+.Ss stop
+.Nm btcli
+.Cm stop
+.Ar
+.Pp
+.Nm btcli
+.Cm stop
+.Fl a
+.Pp
+Deactivate torrents.
+.Pp
 .Cm stop
 supports the following options:
 .Bl -tag -width Ds
